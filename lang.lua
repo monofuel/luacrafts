@@ -49,13 +49,7 @@ function lang_tokenize(input)
             local offset = input:seek('cur')
             error('unexpected on line ' .. tostring(lineNo).. ' : "' .. line .. '" at offset ' .. tostring(offset))
         end
-        -- cases:
-        -- whitespace
-        -- quote
-        -- digit
-        -- puctuation ch
-        -- operator ch
-        -- otherwise error
+
         eatWhitespace()
 
         local offset = input:seek('cur')
@@ -131,36 +125,6 @@ function lang_tokenize(input)
         else
             token_error()
         end
-    end
-end
-
--- TODO this is all wrong and awful
-function tokenize_old(input)
-    local buf = ''
-    return function()
-        -- read in the next line, if buf is empty
-        local token = nil
-        while token == nil do
-            buf = buf:gsub("(^\\s|;)+", "")
-            while #buf == 0 do
-                buf = input:read("*l")
-                if buf == nil then
-                    return
-                end
-            end
-            print('1', buf)
-            -- remove any leading whitespace or ;
-            buf = buf:gsub("(^\\s|;)+", "")
-            print('2', buf)
-            -- pop a token off buf
-            -- resumes with the next token in the buf line
-            buf = buf:gsub("[^\\s|;]+", function(t) token = t; return "" end)
-            print('3', buf)
-
-        end
-        print(token)
-        return token
-
     end
 end
 
