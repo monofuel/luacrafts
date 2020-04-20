@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  test:
+    build: .
+    command: make test
+    volumes:
+      - .:/code/
