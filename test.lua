@@ -1,4 +1,4 @@
-local Lang = require('lang')
+local Lang = require('mlang/mlang')
 
 -- possible features:
 --  detect cycles?
@@ -8,7 +8,7 @@ local Lang = require('lang')
 --  minify / obfuscate?
 
 function main()
-    lang = Lang:new('lang.lua')
+    lang = Lang:new('mlang/mlang.lua')
 end
 
 main()
