@@ -1,3 +1,4 @@
+-- TODO make this work on non-open computers
 local filesystem = require("filesystem")
 require("util")
 
