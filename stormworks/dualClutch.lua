@@ -1,6 +1,9 @@
 -- R is -1, N is 0, then 1-6
+-- 7 is 3 + 5
+-- 8 is 4 + 6
+
 gear=0
-TOP_GEAR=6
+TOP_GEAR=8
 
 -- TODO add more gears by combining them
 
@@ -56,11 +59,11 @@ function setClutch()
 	evenClutch = 0
 	oddCluch = 0
 	-- either clutch could be used for first gear
-	if (gear == -1 or gear == 1 or gear == 3 or gear == 5) then
+	if (gear == -1 or gear == 1 or gear == 3 or gear == 5 or gear == 7) then
 		evenClutch = 0
 		oddClutch = 1
 	end
-	if (gear == 2 or gear == 4 or gear == 6) then
+	if (gear == 2 or gear == 4 or gear == 6 or gear == 8) then
 		evenClutch = 1
 		oddClutch = 0
 	end
@@ -83,7 +86,13 @@ function setGear()
 	elseif (gear == 5) then
 		gearbox5 = true
 	elseif (gear == 6) then
-		gearbox6 = true
+        gearbox6 = true
+    elseif (gear == 7) then
+        gearbox3 = true
+        gearbox5 = true
+    elseif (gear == 8) then
+        gearbox4 = true
+        gearbox6 = true
 	end
 end
 
