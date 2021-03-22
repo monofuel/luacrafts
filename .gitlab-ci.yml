@@ -12,3 +12,4 @@ lua_test:
   script:
     - lua5.3 -v
     - make test
+    - make stormworks-test

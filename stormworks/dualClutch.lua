@@ -2,11 +2,16 @@
 -- 7 is 3 + 5
 -- 8 is 4 + 6
 
-gear=0
 TOP_GEAR=8
+-- CLUTCH_TICKS is how many ticks to engage clutch
+CLUTCH_TICKS=60
+-- CLUTCH_OFFSET is the gap between engaging and disengaging each clutch
+CLUTCH_OFFSET=50
 
--- TODO add more gears by combining them
 
+gear=0
+previousGear = 0
+clutchTick = 0
 upShifting = false
 downShifting = false
 
@@ -51,46 +56,84 @@ function writeOutputs()
 end
 
 -- sets the clutch for the appropriate gear
--- NB. this immediately switches the clutch
--- TODO it could be nice to smoothly switch clutches?
-
--- TODO sin() / cos() between gear shifts for continuous power?
 function setClutch()
+
+    local c = (clutchTick / CLUTCH_TICKS) * (math.pi / 2)
+    if clutchTick > CLUTCH_TICKS then
+        c = math.pi / 2
+    end
+    local c2 = 0
+    if (clutchTick > CLUTCH_OFFSET) then
+        c2 = ((clutchTick - CLUTCH_OFFSET) / CLUTCH_TICKS) * (math.pi / 2)
+    end
+    
 	evenClutch = 0
 	oddCluch = 0
-	-- either clutch could be used for first gear
-	if (gear == -1 or gear == 1 or gear == 3 or gear == 5 or gear == 7) then
-		evenClutch = 0
-		oddClutch = 1
+
+    if (gear == -1 or gear == 1 or gear == 3 or gear == 5 or gear == 7) then
+        if clutchTick == CLUTCH_TICKS + CLUTCH_OFFSET then
+            evenClutch = 0
+            oddClutch = 1
+        else
+            evenClutch = math.cos(c) -- approaching 0
+            oddClutch = math.sin(c2) -- approaching 1
+        end
 	end
-	if (gear == 2 or gear == 4 or gear == 6 or gear == 8) then
-		evenClutch = 1
-		oddClutch = 0
-	end
+    if (gear == 2 or gear == 4 or gear == 6 or gear == 8) then
+        if clutchTick == CLUTCH_TICKS + CLUTCH_OFFSET then
+            evenClutch = 1
+            oddClutch = 0
+        else
+            evenClutch = math.sin(c2) -- approaching 1
+            oddClutch =  math.cos(c) -- approaching 0
+        end
+    end
+    
+    clutchTick = clutchTick + 1
+    if clutchTick > CLUTCH_TICKS + CLUTCH_OFFSET then
+        clutchTick = 0
+    end
+
+    if gear == 0 then
+        oddClutch = 0
+        evenClutch = 0
+    end
 end
 
 function setGear()
-	if (gear == -1) then
-		gearboxR = true
-	elseif (gear == 0) then
-		-- do nothing, both clutches disengaged
-	elseif (gear == 1) then
+
+    -- also engage the previous gear, such that we can smoothly clutch between gears
+
+	if (gear == -1 or previousGear == -1) then
+        gearboxR = true
+    end
+	if (gear == 0 or previousGear == 0) then
+        -- do nothing, both clutches disengaged
+    end
+	if (gear == 1) then
 		-- do nothing
-		-- will keep all gearboxes in 1:1 ratio
-	elseif (gear == 2) then
-		gearbox2 = true
-	elseif (gear == 3) then
-		gearbox3 = true
-	elseif (gear == 4) then
-		gearbox4 = true
-	elseif (gear == 5) then
+        -- will keep all gearboxes in 1:1 ratio
+    end
+	if (gear == 2 or previousGear == 2) then
+        gearbox2 = true
+    end
+	if (gear == 3 or previousGear == 3) then
+        gearbox3 = true
+    end
+	if (gear == 4 or previousGear == 4) then
+        gearbox4 = true
+    end
+	if (gear == 5 or previousGear == 5) then
 		gearbox5 = true
-	elseif (gear == 6) then
+    end
+    if (gear == 6 or previousGear == 6) then
         gearbox6 = true
-    elseif (gear == 7) then
+    end
+    if (gear == 7 or previousGear == 7) then
         gearbox3 = true
         gearbox5 = true
-    elseif (gear == 8) then
+    end
+    if (gear == 8 or previousGear == 8) then
         gearbox4 = true
         gearbox6 = true
 	end
@@ -103,22 +146,21 @@ function onTick()
 	shiftDownInput = input.getBool(2)
 
 
-    -- shifting gears logic	
-	doPopClutch = false
-
-	if (shiftUpInput and not upShifting) then
-		upShifting = true
+	if (shiftUpInput and not upShifting and clutchTick == 0) then
+        upShifting = true
+        previousGear = gear
 		gear = gear + 1
-		doPopClutch = true
+		clutchTick = 1
 	end
 	if (not shiftUpInput) then
 		upShifting = false
     end
 
-	if (shiftDownInput and not downShifting) then
-		downShifting = true
+	if (shiftDownInput and not downShifting  and clutchTick == 0) then
+        downShifting = true
+        previousGear = gear
 		gear = gear - 1
-		doPopClutch = true
+		clutchTick = 1
 	end
 	if (not shiftDownInput) then
 		downShifting = false
@@ -133,7 +175,7 @@ function onTick()
 	
 	-- update values
 	clearGears()
-	if (doPopClutch) then
+	if clutchTick ~= 0 then
 		setClutch()
 	end
 	setGear()
@@ -150,8 +192,17 @@ function onDraw()
 	end
 	if (gear == -1) then
 	    gearText = "R"
+    end
+    
+    prevGearText = previousGear
+    if (previousGear == 0) then
+		prevGearText = "N"
 	end
-	screen.drawText(2,2, "Gear " .. gearText)
-	screen.drawText(2,7, "EClutch " .. evenClutch)
-	screen.drawText(2,13, "OClutch " .. oddClutch)
+	if (previousGear == -1) then
+	    prevGearText = "R"
+    end
+    screen.drawText(2,2, "Gear " .. gearText)
+    screen.drawText(2,7, "Prev " .. prevGearText)
+	screen.drawText(2,13, "EClutch " .. evenClutch)
+	screen.drawText(2,18, "OClutch " .. oddClutch)
 end

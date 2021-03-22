@@ -2,6 +2,12 @@ require("./testUtil")
 require("./dualClutch")
 
 
+function fullShift() 
+    for i = 0, CLUTCH_TICKS + CLUTCH_OFFSET, 1 do
+        onTick()
+    end
+end
+
 function testZeroCase()
     input.values[1] = false
     input.values[2] = false
@@ -24,6 +30,7 @@ function testFirstGear()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift() 
 
     assertOutput(1, 1);
     assertOutput(2, 0);
@@ -43,12 +50,33 @@ function testSecondGear()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift()
 
     assertOutput(1, 0);
     assertOutput(2, 1);
     assertOutput(3, false);
     assertOutput(4, true);
     assertOutput(5, false);
+    assertOutput(6, false);
+    assertOutput(7, false);
+    assertOutput(8, false);
+end
+
+function testThirdGear()
+    input.values[1] = false
+    input.values[2] = false
+    
+    onTick()
+    input.values[1] = true
+    onTick()
+    input.values[1] = false
+    fullShift()
+
+    assertOutput(1, 1);
+    assertOutput(2, 0);
+    assertOutput(3, false);
+    assertOutput(4, true);
+    assertOutput(5, true);
     assertOutput(6, false);
     assertOutput(7, false);
     assertOutput(8, false);
@@ -62,26 +90,25 @@ function testSeventhGear()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift()
 
     onTick()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift()
 
     onTick()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift()
 
     onTick()
     input.values[1] = true
     onTick()
     input.values[1] = false
-
-    onTick()
-    input.values[1] = true
-    onTick()
-    input.values[1] = false
+    fullShift()
 
     assertOutput(1, 1); -- odd clutch
     assertOutput(2, 0); -- even clutch
@@ -90,7 +117,7 @@ function testSeventhGear()
     assertOutput(5, true);
     assertOutput(6, false);
     assertOutput(7, true);
-    assertOutput(8, false);
+    assertOutput(8, true);
 end
 
 function testEighthGear()
@@ -101,6 +128,7 @@ function testEighthGear()
     input.values[1] = true
     onTick()
     input.values[1] = false
+    fullShift()
 
     assertOutput(1, 1); -- odd clutch
     assertOutput(2, 0); -- even clutch
@@ -116,4 +144,5 @@ end
 testZeroCase()
 testFirstGear()
 testSecondGear()
+testThirdGear()
 testSeventhGear()
