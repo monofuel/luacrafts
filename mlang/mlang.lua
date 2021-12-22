@@ -157,7 +157,14 @@ function generate_ast(input)
         contents = {}
     }
 
-    local next = lang_tokenize(input)
+    tokens = {}
+    for token in lang_tokenize() do
+        table.insert(tokens,token)
+    end
+
+    local next = function() return table.remove(tokens, 1) end
+    local peek = function() return table[1] end
+
 
     for token in next do
 
@@ -174,11 +181,12 @@ function generate_ast(input)
             local token1 = next()
             print(toPrettyPrint(token1))
 
-            local token2 = next()
+            local token2 = peek()
             print(toPrettyPrint(token2))
 
             if token2.type == 'punctuation' and token2.value == "(" then
                 -- this is a function call
+                next() -- pop the peek()ed token
             else
                 error("confused on current expression" .. toPrettyPrint(token1))
             end
