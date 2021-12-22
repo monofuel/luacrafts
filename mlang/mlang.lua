@@ -25,7 +25,7 @@ function lang_tokenize(input)
 
     function getLine()
         local line = ""
-        while peek() ~= '\n' do
+        while peek(2) ~= '\r\n' and peek() ~= '\n' do
             line = line .. next()
         end
         next() -- eat up the newline
@@ -58,7 +58,13 @@ function lang_tokenize(input)
         function token_error()
             local line = getLine() or ""
             local offset = input:seek('cur')
-            error('unexpected on line ' .. tostring(lineNo).. ' : "' .. line .. '" at offset ' .. tostring(offset))
+
+            local token = {
+                lineNo = lineNo,
+                line = line,
+                offset = offset
+            }
+            error('unexpected token: ' .. toPrettyPrint(token))
         end
 
         eatWhitespace()
@@ -70,7 +76,6 @@ function lang_tokenize(input)
             return nil
         elseif peek(2) == '--' then
             local line = getLine()
-            print('found comment', line)
             return {
                 type = 'comment',
                 value = line
@@ -115,8 +120,20 @@ function lang_tokenize(input)
                 value = str
             }
         elseif peek():match('%p') then
-            -- TODO punctuation & operators
+            -- punctuation & operators
+            print(peek())
+            -- NB. had some issues matching on [ and ]
             if peek():match('[\\(\\)\\{\\}\\,]') then
+                return {
+                    type = 'punctuation',
+                    value = next()
+                }
+            elseif peek() == '[' then
+                return {
+                    type = 'punctuation',
+                    value = next()
+                }
+            elseif peek() == ']' then
                 return {
                     type = 'punctuation',
                     value = next()
@@ -158,16 +175,17 @@ function generate_ast(input)
     }
 
     tokens = {}
-    for token in lang_tokenize() do
+    for token in lang_tokenize(input) do
         table.insert(tokens,token)
     end
 
+
     local next = function() return table.remove(tokens, 1) end
-    local peek = function() return table[1] end
+    local peek = function() return tokens[1] end
 
 
     for token in next do
-
+        print(toPrettyPrint(token))
         function token_err() 
             error("unhandled token: " .. toPrettyPrint(token))
         end
@@ -175,7 +193,6 @@ function generate_ast(input)
         function pop_expression()
             local expression = {
                 type = "expression",
-                contents = {}
             }
 
             local token1 = next()
