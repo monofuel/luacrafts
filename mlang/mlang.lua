@@ -1,4 +1,5 @@
 local io = require("io")
+require("./util")
 
 function lang_tokenize(input)
     local lineNo = 1
@@ -149,6 +150,80 @@ function tohex(str)
     end))
 end
 
+-- TODO should probably be recursive for function blocks
+function generate_ast(input) 
+    block = {
+        type = "block",
+        contents = {}
+    }
+
+    local next = lang_tokenize(input)
+
+    for token in next do
+
+        function token_err() 
+            error("unhandled token: " .. toPrettyPrint(token))
+        end
+
+        function pop_expression()
+            local expression = {
+                type = "expression",
+                contents = {}
+            }
+
+            local token1 = next()
+            print(toPrettyPrint(token1))
+
+            local token2 = next()
+            print(toPrettyPrint(token2))
+
+            if token2.type == 'punctuation' and token2.value == "(" then
+                -- this is a function call
+            else
+                error("confused on current expression" .. toPrettyPrint(token1))
+            end
+
+
+            return expression
+        end
+
+        print("token: " .. toPrettyPrint(token))
+        if token.type == "keyword" then
+            if token.value == 'local' then
+                local var_name = next()
+                if (var_name.type ~= "keyword") then
+                    error("expected a string to follow 'local'. got "  .. toPrettyPrint(var_name))
+                end
+                local operator = next()
+                if (operator.type ~= 'operator' or operator.value ~= '=') then
+                    error("expected an operator: ".. toPrettyPrint(operator))
+                end
+
+                expression = pop_expression();
+
+
+                local statement = {
+                    type = "statement",
+                    isLocal = true,
+                    variable = var_name.value,
+                    operation = operator.value,
+                    expression = expression,
+                }
+                print("STATEMENT: " .. toPrettyPrint(statement))
+                -- TODO handle nested statements
+                table.insert(block.contents, statement)
+
+            else
+                token_err()
+            end
+            
+        else
+            token_err()
+        end
+    end
+    return block
+end
+
 local Lang = {}
 
 function Lang:new(filepath)
@@ -156,21 +231,29 @@ function Lang:new(filepath)
 
     file = io.open(filepath, "r")
 
-
+    lang.file = file
     lang.block = {}
   
     -- for c in file:lines() do
     --   print(c)
     -- end
 
-    for token in lang_tokenize(file) do
-
-        print("token -- type: ",  token.type, " value: ", token.value)
-    end
+    lang.block = generate_ast(file)
 
     return lang
 end
 
+function Lang:unroll()
+    -- TODO
+    -- TODO should probably be immutable, return a copy
+    -- scan through the syntax tree for `require` and unroll them
+    -- TODO optional skip certain requires?
+
+
+end
+
+
+-- when testing mlang on itself, this function is to test various edge cases
 function edgeCases()
     local a, b
 

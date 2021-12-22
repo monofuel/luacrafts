@@ -200,3 +200,31 @@ function isOC()
     -- assume we are on open computers if the component package is loaded
     return not not package.loaded.component
 end
+
+
+function toPrettyPrint(v, preStr, delim)
+    if preStr == nil then
+        preStr = ''
+    end
+    if delim == nil then
+        delim = ", "
+    end
+        
+    
+    --  "nil" | "number" | "string" | "boolean" | "table" | "function" | "thread" | "userdata"
+    local t = type(v)
+    if t == 'nil' or t == 'number' or t == 'string' or t == 'boolean' then
+        if t == 'string' then
+            return preStr .. '"' .. tostring(v) .. '"'
+        else
+            return preStr .. tostring(v)
+        end
+    elseif t == 'table' then
+        local str = preStr .. '{ '
+        for k2, v2 in pairs(v) do
+            str = str .. preStr .. k2 .. ' ='
+            str = str .. toPrettyPrint(v2, preStr .. ' ', delim) .. delim
+        end
+        return str .. preStr ..  ' }'
+    end
+end

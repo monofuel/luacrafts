@@ -1,9 +1,9 @@
-
+LUA=lua
 
 .PHONY: test
 test:
-	lua5.3 test.lua
+	$(LUA) test.lua
 
 .PHONY: stormworks-test
 stormworks-test:
-	cd stormworks && lua5.3 dualClutch_test.lua
+	cd stormworks && $(LUA) dualClutch_test.lua
