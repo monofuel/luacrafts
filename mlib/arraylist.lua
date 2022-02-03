@@ -1,0 +1,12 @@
+-- TODO better name?
+
+-- functions()
+-- new arraylist
+-- push
+-- pop
+-- get
+-- set
+-- insert
+-- shift
+-- unshift
+-- pretty print
