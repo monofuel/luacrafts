@@ -3,17 +3,14 @@ require('util')
 -- TODO implement functions
 -- functions()
 -- concat
--- pop
 -- insert
 -- shift
 -- unshift
--- map
 -- reduce
 -- reverse
 -- clone
 -- filter
 -- find
--- each
 -- slice
 -- splice
 -- isempty
@@ -21,7 +18,7 @@ require('util')
 -- toTable
 
 -- TODO improve metatable functions
--- __concat __pairs
+-- __concat
 -- __eq 
 
 function normalizeIndex(i, size) 
@@ -75,6 +72,22 @@ function Vector:__len()
     return self.size
 end
 
+function Vector:__ipairs()
+    local next = 0
+    return function()
+        if (next >= self.size) then
+            return nil
+        end
+        local k = next
+        next = next + 1
+        return k, self.data[k + 1]
+    end
+end
+
+-- __pairs is equivilent to __ipairs for a Vector
+-- since we shouldn't have string keys
+Vector.__pairs = Vector.__ipairs
+
 function VectorMethods:length()
     return self.size
 end
@@ -83,6 +96,16 @@ function VectorMethods:push(v)
     self:set(self.size, v)
 end
 
+function VectorMethods:pop()
+    if (self.size == 0) then
+        return nil
+    end
+
+    local result = self:get(self.size - 1)
+    self:set(self.size - 1, nil)
+    self.size = self.size - 1
+    return result
+end
 
 function VectorMethods:set(index, value)
     index = normalizeIndex(index, self.size)
@@ -100,9 +123,43 @@ function VectorMethods:get(index)
     return self.data[index]
 end
 
+function VectorMethods:each(fn)
+    for i, v in ipairs(self.data) do
+        fn(i - 1,v)
+    end
+end
+
+function VectorMethods:map(fn)
+    local result = Vector:new(self.size)
+    for i, v in ipairs(self.data) do
+        result[i-1] = fn(i - 1,v)
+    end
+    return result
+end
+
+function VectorMethods:reduce(fn)
+    local result = nil
+    for i, v in ipairs(self.data) do
+        result = fn(i - 1, v, result)
+    end
+    return result
+end
+
+function VectorMethods:join(delim)
+    delim = delim or ','
+    local result = ""
+    self:each(function(i,v)
+        if (i == self.size - 1) then
+            result = result .. toPrettyPrint(v)
+        else
+            result = result .. toPrettyPrint(v) .. delim
+        end
+    end)
+    return result
+end
+
 function VectorMethods:toString()
-    -- TODO better pretty print
-    return toPrettyPrint(self.data)
+    return "[" .. self:join() .. "]"
 end
 
 return Vector

@@ -231,6 +231,6 @@ end
 function assertType(t1, v)
     local t2 = type(v)
     if t1 ~= t2 then
-        error("expected type: " .. t1 .. " but found " .. t2)
+        error("expected type: " .. t1 .. " but found " .. t2 .. ' with value ' .. toPrettyPrint(v))
     end
 end

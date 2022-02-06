@@ -36,8 +36,76 @@ function main()
     assertEqual(vec:get(-2), 2)
     assertEqual(vec:get(-3), 15)
 
+    -- test each
+    local count = 0
+    vec:each(function(i, v)
+        assertEqual(count, i)
+        count = count + 1
+        if (i == 0) then
+            assertEqual(v, 15)
+        elseif (i == 1) then
+            assertEqual(v, 2)
+        elseif (i == 2) then 
+            assertEqual(v, 3)
+        else
+            error("invalid index when mapping: " .. i)
+        end
+    end)
+    assertEqual(count, 3)
 
-    -- TODO test pairs, ipairs
+    -- test map
+    local mapResult = vec:map(function(i, v)
+        return v + 5;
+    end)
+    assertEqual(mapResult:get(0), 20)
+    assertEqual(mapResult:get(1), 7)
+    assertEqual(mapResult:get(2), 8)
+    assertEqual(#mapResult, 3)
+    print(mapResult:toString())
+
+    -- test reduce
+    local reduceResult = vec:reduce(function(i, v, result)
+        result = result or 0
+        return result + v;
+    end)
+    assertEqual(reduceResult, 3 + 2 + 15)
+
+    -- test pairs, ipairs
+    local count = 0
+    for i, v in pairs(vec) do
+        assertEqual(count, i)
+        count = count + 1
+        if (i == 0) then
+            assertEqual(v, 15)
+        elseif (i == 1) then
+            assertEqual(v, 2)
+        elseif (i == 2) then 
+            assertEqual(v, 3)
+        else
+            error("invalid index in pairs(): " .. i)
+        end
+    end
+    local count = 0
+    for i, v in ipairs(vec) do
+        assertEqual(count, i)
+        count = count + 1
+        if (i == 0) then
+            assertEqual(v, 15)
+        elseif (i == 1) then
+            assertEqual(v, 2)
+        elseif (i == 2) then 
+            assertEqual(v, 3)
+        else
+            error("invalid index in ipairs(): " .. i)
+        end
+    end
+
+    -- test pop
+    assertEqual(vec:pop(), 3)
+    assertEqual(vec:pop(), 2)
+    assertEqual(vec:pop(), 15)
+    assertEqual(vec:pop(), nil)
+    assertEqual(#vec, 0)
 
 end
 
