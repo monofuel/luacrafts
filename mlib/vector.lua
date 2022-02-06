@@ -2,27 +2,52 @@ require('util')
 
 -- TODO implement functions
 -- functions()
--- __concat
 -- concat
 -- pop
 -- insert
 -- shift
 -- unshift
 -- map
--- foreach
+-- reduce
+-- reverse
+-- clone
+-- filter
+-- find
+-- each
+-- slice
+-- splice
+-- isempty
+-- Vector:of()
+-- toTable
+
+-- TODO improve metatable functions
+-- __concat __pairs
+-- __eq 
+
+function normalizeIndex(i, size) 
+    assertType("number", i)
+    assertType("number", size)
+    if (i >= 0) then
+        return i + 1;
+    else
+        local ret = size + i + 1
+        if (ret < 1) then
+            error("negative index larger than size")
+        end
+        return ret;
+    end
+end
 
 Vector = {}
+VectorMethods = {}
 
 -- create a new Vector
 -- similar to C++ Vector or Java Arraylist
 -- Vector index starts at 0
 -- NB. the underlying table index starts at 1 to preserve order
+-- nil is supported as a value type (normally interpreted as end of array)
 function Vector:new(size)
-    local meta = {
-        __index = Vector,
-        __len = getSize,
-    }
-    local vec = setmetatable({}, meta)
+    local vec = setmetatable({}, Vector)
     
     vec.size = (size or 0)
     vec.data = {}
@@ -34,40 +59,48 @@ function Vector:new(size)
     return vec
 end
 
-function Vector:length()
-    return getSize(self)
+function Vector:__index(index)
+    return VectorMethods[index] or self:get(index)
 end
 
-function getSize(vec) 
-    return vec.size
-end
-
-function Vector:push(v) 
-    self.data[self.size + 1] = v
-    self.size = self.size + 1
-end
-
-function Vector:set(index, value)
-    assertType("number", index)
-    if (index < 0) then
-        error("index must be positive but got " .. index)
-    elseif (index > self.size) then
-        self.size = index + 1
+function Vector:__newindex(index, value)
+    if (type(index) == "number") then
+        return self:set(index, value)
+    else
+        rawset(self, index, value)
     end
-    self.data[index + 1] = value
 end
 
-function Vector:get(index)
-    assertType("number", index)
-    if (index < 0) then
-        error("index must be positive but got " .. index)
-    elseif (index > self.size) then
-        error('index out of bounds, got ' .. index .. ' but size is ' .. self.size)
+function Vector:__len()
+    return self.size
+end
+
+function VectorMethods:length()
+    return self.size
+end
+
+function VectorMethods:push(v) 
+    self:set(self.size, v)
+end
+
+
+function VectorMethods:set(index, value)
+    index = normalizeIndex(index, self.size)
+    if (index > self.size) then
+        self.size = index
     end
-    return self.data[index + 1]
+    self.data[index] = value
 end
 
-function Vector:toString()
+function VectorMethods:get(index)
+    index = normalizeIndex(index, self.size)
+    if (index > self.size) then
+        error("index " .. index .. " greater than size " .. self.size)
+    end
+    return self.data[index]
+end
+
+function VectorMethods:toString()
     -- TODO better pretty print
     return toPrettyPrint(self.data)
 end
