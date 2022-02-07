@@ -148,6 +148,7 @@ end
 function VectorMethods:join(delim)
     delim = delim or ','
     local result = ""
+    -- TODO use a stringbuilder
     self:each(function(i,v)
         if (i == self.size - 1) then
             result = result .. toPrettyPrint(v)

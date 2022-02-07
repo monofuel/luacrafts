@@ -15,7 +15,9 @@
 
 - rollup / minify scripts?
 - lua screeps AI?
+- test framework?
 - mlib
+    - immutables?
     - arraylist / vector
     - hashmap
     - linked list
@@ -25,6 +27,7 @@
     - stack
     - heap
     - queue
+    - ringbuffer
 
 # Issues
 

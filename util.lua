@@ -227,8 +227,28 @@ function toPrettyPrint(v, preStr, delim)
     end
 end
 
+local types = {
+    ["nil"]  = "nil",
+    number = "number",
+    string = "string",
+    boolean = "boolean",
+    table = "table",
+    ["function"] = "function",
+    thread = "thread",
+    userdata = "userdata"
+}
+
+function assertIsTypeString(str)
+    local r = types[str]
+    if (r == nil) then
+        error("expected a name of a type, got " .. toPrettyPrint(str))
+    end
+
+end
+
 --  "nil" | "number" | "string" | "boolean" | "table" | "function" | "thread" | "userdata"
 function assertType(t1, v)
+    assertIsTypeString(t1)
     local t2 = type(v)
     if t1 ~= t2 then
         error("expected type: " .. t1 .. " but found " .. t2 .. ' with value ' .. toPrettyPrint(v))
