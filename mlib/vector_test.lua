@@ -14,7 +14,6 @@ function main()
     vec:push(3)
     assertEqual(vec:length(), 3)
     assertEqual(vec:length(), #vec)
-    print(vec:toString())
 
     -- test get
     assertEqual(vec:get(0), 1)
@@ -25,11 +24,10 @@ function main()
     vec:set(0, 10)
     assertEqual(vec:get(0), 10)
     assertEqual(vec[0], 10)
-    print(vec:toString())
+
     vec[0] = 15
     assertEqual(vec:get(0), 15)
     assertEqual(vec[0], 15)
-    print(vec:toString())
 
     -- test negative indexes
     assertEqual(vec:get(-1), 3)
@@ -61,7 +59,6 @@ function main()
     assertEqual(mapResult:get(1), 7)
     assertEqual(mapResult:get(2), 8)
     assertEqual(#mapResult, 3)
-    print(mapResult:toString())
 
     -- test reduce
     local reduceResult = vec:reduce(function(i, v, result)
