@@ -16,6 +16,7 @@
 - rollup / minify scripts?
 - lua screeps AI?
 - test framework?
+- profiler?
 - mlib
     - immutables?
     - arraylist / vector
