@@ -1,8 +1,9 @@
 require("mfs/fs")
-require("util")
+require("testlib")
 
 function runTestFile(file)
-    print("## Running tests: " .. file)
+    io.write("\27[0;37m")
+    print("# Running tests: " .. file)
     dofile(file)
 end
 
@@ -27,4 +28,4 @@ function runDirTests(dir)
 end
 
 runDirTests(".")
-print("## Success!")
+print("# Success!")
