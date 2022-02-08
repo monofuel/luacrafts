@@ -1,5 +1,5 @@
-require("./testUtil")
-require("./dualClutch")
+require("stormworks/testUtil")
+require("stormworks/dualClutch")
 
 
 function fullShift() 

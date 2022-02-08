@@ -10,6 +10,7 @@
 - https://wiki.osdev.org/Books
 - https://github.com/andremm/lua-parser
 - https://github.com/lua/lua
+- lua regexes are special https://www.lua.org/manual/5.3/manual.html#6.4.1
 
 # TODO
 

@@ -13,4 +13,5 @@ function main()
     lang = Lang:new('mlang/mlang.lua')
 end
 
-main()
+-- TODO re-enable this test
+-- main()
