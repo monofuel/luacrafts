@@ -8,10 +8,8 @@ local Lang = require('mlang/mlang')
 --  formatting
 --  minify / obfuscate?
 
-function main()
-    -- test mlang on itself
-    lang = Lang:new('mlang/mlang.lua')
-end
-
--- TODO re-enable this test
--- main()
+testSuite("mlang", function()
+    skipTest("mlang parse self", function()
+        lang = Lang:new('mlang/mlang.lua')
+    end)
+end)

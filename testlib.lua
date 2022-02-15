@@ -13,10 +13,11 @@ function doTest(name, fn)
     -- if we do catch an error, make sure test returns non-zero status code
     fn()
     print("\27[32m### " .. currentSuite .. " : " .. name)
-    io.write("\27[0;37m")
+    io.write("\27[0m")
 end
 
 function skipTest(name, fn)
-    print("### " .. currentSuite .. " : " .. name)
+    print("\27[33m### " .. currentSuite .. " : " .. name)
     print('\t SKIPPING TEST')
+    io.write("\27[0m")
 end

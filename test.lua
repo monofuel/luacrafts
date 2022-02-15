@@ -2,7 +2,7 @@ require("mfs/fs")
 require("testlib")
 
 function runTestFile(file)
-    io.write("\27[0;37m")
+    io.write("\27[0m")
     print("# Running tests: " .. file)
     dofile(file)
 end
