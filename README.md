@@ -19,6 +19,8 @@
 - more test framework stuff
 - profiler?
 - color library
+- text editor?
+- big number library (like big.js)
 - mlib
     - immutables?
     - arraylist / vector

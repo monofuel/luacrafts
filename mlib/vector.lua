@@ -24,10 +24,12 @@ require('util')
 function normalizeIndex(i, size) 
     assertType("number", i)
     assertType("number", size)
-    if (i >= 0) then
-        return i + 1;
+    if (i >= 1) then
+        return i;
+    elseif (i == 0) then
+        error("invalid index: 0")
     else
-        local ret = size + i + 1
+        local ret = size + 1 + i
         if (ret < 1) then
             error("negative index larger than size")
         end
@@ -40,7 +42,7 @@ VectorMethods = {}
 
 -- create a new Vector
 -- similar to C++ Vector or Java Arraylist
--- Vector index starts at 0
+-- Vector index starts at 1
 -- NB. the underlying table index starts at 1 to preserve order
 -- nil is supported as a value type (normally interpreted as end of array)
 function Vector:new(size)
@@ -73,14 +75,14 @@ function Vector:__len()
 end
 
 function Vector:__ipairs()
-    local next = 0
+    local next = 1
     return function()
-        if (next >= self.size) then
+        if (next >= self.size + 1) then
             return nil
         end
         local k = next
         next = next + 1
-        return k, self.data[k + 1]
+        return k, self.data[k]
     end
 end
 
@@ -93,7 +95,7 @@ function VectorMethods:length()
 end
 
 function VectorMethods:push(v) 
-    self:set(self.size, v)
+    self:set(self.size + 1, v)
 end
 
 function VectorMethods:pop()
@@ -101,8 +103,8 @@ function VectorMethods:pop()
         return nil
     end
 
-    local result = self:get(self.size - 1)
-    self:set(self.size - 1, nil)
+    local result = self:get(self.size)
+    self:set(self.size, nil)
     self.size = self.size - 1
     return result
 end
@@ -125,14 +127,14 @@ end
 
 function VectorMethods:each(fn)
     for i, v in ipairs(self.data) do
-        fn(i - 1,v)
+        fn(i,v)
     end
 end
 
 function VectorMethods:map(fn)
     local result = Vector:new(self.size)
     for i, v in ipairs(self.data) do
-        result[i-1] = fn(i - 1,v)
+        result[i] = fn(i,v)
     end
     return result
 end
@@ -140,7 +142,7 @@ end
 function VectorMethods:reduce(fn)
     local result = nil
     for i, v in ipairs(self.data) do
-        result = fn(i - 1, v, result)
+        result = fn(i, v, result)
     end
     return result
 end

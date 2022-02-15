@@ -16,18 +16,18 @@ function main()
     assertEqual(vec:length(), #vec)
 
     -- test get
-    assertEqual(vec:get(0), 1)
-    assertEqual(vec:get(1), 2)
-    assertEqual(vec:get(2), 3)
+    assertEqual(vec:get(1), 1)
+    assertEqual(vec:get(2), 2)
+    assertEqual(vec:get(3), 3)
 
     -- test __index and __newindex
-    vec:set(0, 10)
-    assertEqual(vec:get(0), 10)
-    assertEqual(vec[0], 10)
+    vec:set(1, 10)
+    assertEqual(vec:get(1), 10)
+    assertEqual(vec[1], 10)
 
-    vec[0] = 15
-    assertEqual(vec:get(0), 15)
-    assertEqual(vec[0], 15)
+    vec[1] = 15
+    assertEqual(vec:get(1), 15)
+    assertEqual(vec[1], 15)
 
     -- test negative indexes
     assertEqual(vec:get(-1), 3)
@@ -37,13 +37,13 @@ function main()
     -- test each
     local count = 0
     vec:each(function(i, v)
-        assertEqual(count, i)
+        assertEqual(count, i - 1)
         count = count + 1
-        if (i == 0) then
+        if (i == 1) then
             assertEqual(v, 15)
-        elseif (i == 1) then
+        elseif (i == 2) then
             assertEqual(v, 2)
-        elseif (i == 2) then 
+        elseif (i == 3) then 
             assertEqual(v, 3)
         else
             error("invalid index when mapping: " .. i)
@@ -55,9 +55,9 @@ function main()
     local mapResult = vec:map(function(i, v)
         return v + 5;
     end)
-    assertEqual(mapResult:get(0), 20)
-    assertEqual(mapResult:get(1), 7)
-    assertEqual(mapResult:get(2), 8)
+    assertEqual(mapResult:get(1), 20)
+    assertEqual(mapResult:get(2), 7)
+    assertEqual(mapResult:get(3), 8)
     assertEqual(#mapResult, 3)
 
     -- test reduce
@@ -70,13 +70,13 @@ function main()
     -- test pairs, ipairs
     local count = 0
     for i, v in pairs(vec) do
-        assertEqual(count, i)
+        assertEqual(count, i - 1)
         count = count + 1
-        if (i == 0) then
+        if (i == 1) then
             assertEqual(v, 15)
-        elseif (i == 1) then
+        elseif (i == 2) then
             assertEqual(v, 2)
-        elseif (i == 2) then 
+        elseif (i == 3) then 
             assertEqual(v, 3)
         else
             error("invalid index in pairs(): " .. i)
@@ -84,13 +84,13 @@ function main()
     end
     local count = 0
     for i, v in ipairs(vec) do
-        assertEqual(count, i)
+        assertEqual(count, i - 1)
         count = count + 1
-        if (i == 0) then
+        if (i == 1) then
             assertEqual(v, 15)
-        elseif (i == 1) then
+        elseif (i == 2) then
             assertEqual(v, 2)
-        elseif (i == 2) then 
+        elseif (i == 3) then 
             assertEqual(v, 3)
         else
             error("invalid index in ipairs(): " .. i)
