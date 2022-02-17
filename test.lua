@@ -28,4 +28,5 @@ function runDirTests(dir)
 end
 
 runDirTests(".")
+-- TODO should print stats (passed, skipped, failed)
 print("# Success!")
