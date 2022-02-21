@@ -7,6 +7,10 @@ function runTestFile(file)
     dofile(file)
 end
 
+testSuccessCount = 0
+testFailureCount = 0
+testSkippedCount = 0
+
 function runDirTests(dir)
     -- recurse to sub directories
     -- if a file, check if _test.lua and run
@@ -29,4 +33,8 @@ end
 
 runDirTests(".")
 -- TODO should print stats (passed, skipped, failed)
-print("# Success!")
+if testFailureCount ~= 0  then
+    print( testFailureCount .. " tests failed")
+else
+    print("# Success!")
+end
