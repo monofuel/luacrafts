@@ -1,8 +1,11 @@
-# OpenComputers Projects
+# Luacrafts
 
-- tools in lua for open computers
-- mainly just for learning experience
-
+- Repo of lua projects for learning
+    - data structures
+    - utility libraries
+    - KV database (https://gitlab.com/monofuel34089/distributedsystems)
+- initial implementations of everything in lua, with tests
+    - could re-implement parts in other languages to swap out when supported
 
 # Reading
 
@@ -12,27 +15,60 @@
 - https://github.com/lua/lua
 - lua regexes are special https://www.lua.org/manual/5.3/manual.html#6.4.1
 
-# TODO
+# Project Ideas / TODO List
 
-- rollup / minify scripts?
-- lua screeps AI?
-- more test framework stuff
-- profiler?
-- color library
-- text editor?
-- big number library (like big.js)
-- mlib
-    - immutables?
-    - arraylist / vector
-    - hashmap
-    - linked list
-    - trees
-    - graphs
-    - string builder
-    - stack
-    - heap
-    - queue
-    - ringbuffer
+- projects
+    - satisfactory tools
+        - constructor calculator
+    - satisfactory ficsit network tools?
+    - opencomputers
+        - TODO (not updated for 1.18)
+    - computercraft
+        - TODO
+    - screeps
+        - TODO
+- utilities
+    - rollup / minify scripts
+        - working on some language parsing stuff
+        - some way to add/remove debug / stats / profiler code
+    - test framework
+    - profiler
+    - text editor
+    - curses menu system
+    - http server / client
+        - openAPI
+- libraries
+    - DNS tools?
+    - stats library
+    - some sort of event bus system?
+    - encryption library (implement a popular encrytion scheme)
+    - color library
+    - big number library (like big.js)
+    - schema / formatting system (used on KV store)
+    - mlib
+        - immutables?
+        - arraylist / vector
+        - hashmap
+        - linked list
+        - trees
+        - graphs
+        - string builder
+        - stack
+        - heap
+        - queue
+        - ringbuffer
+- PaaS / FaaS
+    - KV datastore (redis-like?)
+        - queue system (like SQS)
+        - pubsub system (like SNS)
+    - S3-like object store
+        - dynamic require() system backed by object store?
+    - lambda / FaaS
+    - identity system
+    - permissions system
+    
+    
+
 
 # Issues
 
