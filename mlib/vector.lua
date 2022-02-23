@@ -1,3 +1,10 @@
+--- Vector library
+-- Class with handy functions for array actions
+-- inspired by javascript's Array class
+-- Lua tables are great, but it can get confusing when a table has both array and hashmap components.
+-- wrapper around table for using it as only an array. Intended to also help with serialization
+-- @author monofuel
+
 require('util')
 
 -- TODO implement functions
@@ -48,6 +55,8 @@ VectorMethods = {}
 function Vector:new(size)
     local vec = setmetatable({}, Vector)
     
+    -- Lua tables consider 'nil' to be the end of an array
+    -- so also keep track of 'size' to know the real nend of the array
     vec.size = (size or 0)
     vec.data = {}
     if (size ~= nil) then

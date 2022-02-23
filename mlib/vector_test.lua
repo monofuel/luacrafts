@@ -166,4 +166,6 @@ testSuite("vector", function()
         end
     end)
 
+    skipTest("ipairs with array containing nil values")
+
 end)

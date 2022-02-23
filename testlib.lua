@@ -18,7 +18,9 @@ function doTest(name, fn)
         testSuccessCount = testSuccessCount + 1
     else
         print("\27[31m### " .. currentSuite .. " : " .. name)
-        print("\27[31m " .. err)
+        -- print("\27[31m " .. toPrettyPrint(err))
+        -- HACK. throwing error for now to get pretty stacktraces
+        error(err)
         io.write("\27[0m")
         testFailureCount = testFailureCount + 1
     end
