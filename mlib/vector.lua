@@ -24,6 +24,7 @@ require('util')
 -- splice
 -- isempty
 -- Vector:of()
+-- Vector:range()
 -- toTable
 
 -- TODO improve metatable functions
@@ -158,12 +159,56 @@ function VectorMethods:reduce(fn)
     return result
 end
 
-function defaultSort(a,b)
-
+function VectorMethods:last()
+    return self.data[self.size]
 end
 
+function defaultSortCompare(a,b)
+    return b - a
+end
+
+-- sort() in place with MergeSort because it is a stable sort that runs quickly on pre-sorted data
 function VectorMethods:sort(fn)
+    fn = (fn or defaultSortCompare)
     
+    -- a vec of <= 1 is sorted
+    if self.size <= 1 then
+        return self
+    end
+
+    local left = Vector:new()
+    local right = Vector:new()
+    -- TODO could use slice() here
+    self:each(function(i,v)
+        if i <= (self.size / 2) then
+            left:push(v)
+        else
+            right:push(v)
+        end
+    end)
+
+    -- recurse into each partition
+    left:sort(fn)
+    right:sort(fn)
+
+    -- update self with merged sorted list
+    for i = self.size, 1, -1 do
+
+        if (#left ~= 0 and #right ~= 0) then
+            local cmp = fn(left:last(), right:last())
+
+            if (cmp <= 0) then
+                self.data[i] = left:pop()
+            else
+                self.data[i] = right:pop()
+            end
+        elseif (#left ~= 0) then
+            self.data[i] = left:pop()
+        else -- right ~= 0
+            self.data[i] = right:pop()
+        end
+    end
+    return self
 end
 
 -- TODO _eq?
@@ -192,7 +237,7 @@ function VectorMethods:join(delim)
     local result = ""
     -- TODO use a stringbuilder
     self:each(function(i,v)
-        if (i == self.size - 1) then
+        if (i == self.size) then
             result = result .. toPrettyPrint(v)
         else
             result = result .. toPrettyPrint(v) .. delim

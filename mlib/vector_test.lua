@@ -188,4 +188,26 @@ testSuite("vector", function()
         assertEqual(v1:equals(v2), true)
     end)
 
+    doTest("sort()", function()
+        local vec = Vector:new()
+
+        vec:push(3)
+        vec:push(2)
+        vec:push(5)
+        vec:push(10)
+        vec:push(1)
+
+        vec:sort()
+
+        local expected = Vector:new()
+        expected:push(1)
+        expected:push(2)
+        expected:push(3)
+        expected:push(5)
+        expected:push(10)
+        assertEqual(vec:equals(expected), true)
+    end)
+
+    skipTest("sort() with custom fn")
+
 end)
