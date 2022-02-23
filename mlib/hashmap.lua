@@ -1,6 +1,6 @@
 -- Hashmap library
 -- Class for making a safe Hashmap object, and functions for working with them.
--- Inspired by javascript's `Object` class
+-- Inspired by javascript's `Object` class and Lodash
 -- Lua tables are great, but it can get confusing when a table has both array and hashmap components.
 -- wrapper around table for using it as only a hashmap. Intended to also help with serialization
 
@@ -16,18 +16,16 @@ end
 -- TODO
 -- map structure
 -- count
-
--- functions()
--- new map
--- put
--- get
--- delete value
--- delete table
 -- pretty print
 
 
 Hashmap = {}
 HashmapMethods = {}
+
+-- create a new Hashmap
+-- similar to a javascript Object
+-- keys must be strings, index keys will be converted to strings
+-- KV pair sort is not guarenteed
 function Hashmap:new()
     local map = setmetatable({}, HashmapMethods)
 
@@ -66,6 +64,55 @@ function HashmapMethods:__len()
     return self.size
 end
 
--- TODO more Hashmap methods
+-- create a Hashmap from a table
+function Hashmap:of()
+    -- TODO
+end
+
+-- produce a Vector of [key, value] pairs
+function Hashmap:entries(map) 
+    local result = Vector:new(#map)
+    for k, v in pairs() do
+        local entry = {}
+        entry[0] = k
+        entry[1] = v
+        result.push(entry)
+    end
+    return result;
+
+end
+
+-- pretty print the hashmap
+function Hashmap:toString()
+    -- TODO
+end
+
+-- prevent the hashmap from being modified
+function Hashmap:freeze()
+    -- TODO
+end
+
+-- deep equality between hashmaps
+function Hashmap:equals()
+    -- TODO
+end
+
+-- Vector of keys in the hashmap
+function Hashmap:keys(map)
+    local result = Vector:new(#map)
+    for k, v in pairs() do
+        result.push(k)
+    end
+    return result;
+end
+
+-- Vector of values in the hashmap
+function Hashmap:values()
+    local result = Vector:new(#map)
+    for k, v in pairs() do
+        result.push(v)
+    end
+    return result;
+end
 
 return Hashmap

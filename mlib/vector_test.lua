@@ -168,4 +168,24 @@ testSuite("vector", function()
 
     skipTest("ipairs with array containing nil values")
 
+    doTest("equals()", function()
+        local v1 = Vector:new()
+        local v2 = Vector:new()
+
+        v1:push(1)
+        v2:push(1)
+        v1:push(2)
+        v2:push(2)
+        v1:push(3)
+        assertEqual(v1:equals(v2), false)
+        v2:push(3)
+        assertEqual(v1:equals(v2), true)
+
+        v1[2] = 5
+        assertEqual(v1:equals(v2), false)
+
+        v2[2] = 5
+        assertEqual(v1:equals(v2), true)
+    end)
+
 end)

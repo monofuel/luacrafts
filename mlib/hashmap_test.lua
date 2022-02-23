@@ -34,4 +34,8 @@ testSuite("hashmap", function()
         map['A'] = nil
         assertEqual(#map, 0)
     end)
+
+    skipTest("keys()")
+    skipTest("values()")
+    skipTest("entries()")
 end)

@@ -1,6 +1,6 @@
 --- Vector library
 -- Class with handy functions for array actions
--- inspired by javascript's Array class
+-- inspired by javascript's `Array` class and Lodash
 -- Lua tables are great, but it can get confusing when a table has both array and hashmap components.
 -- wrapper around table for using it as only an array. Intended to also help with serialization
 -- @author monofuel
@@ -17,6 +17,8 @@ require('util')
 -- reverse
 -- clone
 -- filter
+-- equals
+-- freeze
 -- find
 -- slice
 -- splice
@@ -154,6 +156,35 @@ function VectorMethods:reduce(fn)
         result = fn(i, v, result)
     end
     return result
+end
+
+function defaultSort(a,b)
+
+end
+
+function VectorMethods:sort(fn)
+    
+end
+
+-- TODO _eq?
+-- I feel like I would assume `==` would check if the array reference is equal,
+-- and not do a deep equality. I'd assume equals() would do a deep or shallow comparison
+
+-- shallow inspect arrays for equality
+function VectorMethods:equals(vec) 
+    if getmetatable(vec) ~= Vector then
+        return false
+    end
+    if (#vec ~= self.size) then
+        return false
+    end
+    for i, v in ipairs(vec) do
+        -- TODO deep comparison?
+        if self.data[i] ~= v then
+            return false
+        end
+    end
+    return true
 end
 
 function VectorMethods:join(delim)
