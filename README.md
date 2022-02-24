@@ -26,6 +26,7 @@ I don't think I ever looked to Lua as a language to learn, or even to use it to 
 - Factorio with the [Moon Logic](https://mods.factorio.com/mod/Moon_Logic) mod
     - Not lua related, but the [fCPU](https://mods.factorio.com/mod/fcpu) mod is super impressive
 - Stormworks has built-in Lua support
+- [Pico-8](https://www.lexaloffle.com/pico-8.php) is an entire virtual console with lua!
 
 ### Exciting professional uses of Lua
 
@@ -69,6 +70,7 @@ I don't think I ever looked to Lua as a language to learn, or even to use it to 
         - some way to add/remove debug / stats / profiler code
     - test framework
     - profiler
+    - logging library (eg: like winston in nodejs)
     - documentation generator
     - text editor
     - curses menu system
@@ -100,6 +102,8 @@ I don't think I ever looked to Lua as a language to learn, or even to use it to 
         - queue
         - ringbuffer
 - PaaS / FaaS
+    - opencomputers / computercraft hypervisor?
+        - some sort of cluster / process management thing
     - KV datastore (redis-like?)
         - queue system (like SQS)
         - pubsub system (like SNS)

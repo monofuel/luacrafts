@@ -39,6 +39,18 @@ function tohex(str)
     end))
 end
 
+function strCmp(str1, str2)
+    if (#str1 == #str2) then
+        for i, v in ipairs(str1) do
+            return string.byte(v) - string.byte()
+        end
+    elseif (#str1 < #str2) then
+        return 1
+    else
+        return -1
+    end
+end
+
 function doubleToBytes(n)
     return string.pack("d", n)
 end
